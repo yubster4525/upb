@@ -41,3 +41,29 @@ git clone https://github.com/mmalahe/upb.git
 cd upb
 pip install -e .
 ~~~~
+
+# Usage
+
+## Training an agent
+
+After installing the dependencies, you can train the provided PPO agent on the
+training version of the game. The training script uses MPI so you can run it
+with multiple processes:
+
+~~~~
+mpirun -np 4 python examples/train.py
+~~~~
+
+Checkpoints will be saved under `data/`. Edit `examples/train.py` if you need to
+adjust the path to your PhantomJS or Chromium driver.
+
+## Running a trained agent
+
+To watch the agent play the standard game, use the rollout script:
+
+~~~~
+mpirun -np 4 python examples/rollout.py
+~~~~
+
+The script loads the most recent saved policy and opens a browser window. Change
+the webdriver path inside `examples/rollout.py` if necessary.
