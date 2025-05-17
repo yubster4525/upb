@@ -53,21 +53,24 @@ training version of the game. The training script uses MPI so you can run it
 with multiple processes:
 
 Ensure that both an MPI implementation and the `mpi4py` Python package are
-installed before running the examples.
+installed before running the examples. Some MPI setups do not inherit your
+shell `PATH`, so explicitly provide the Python interpreter path to `mpirun`:
 
 ~~~~
-mpirun -np 4 python examples/train.py
+mpirun -np 4 $(which python3) examples/train.py
 ~~~~
+*(See `examples/train.sh` for a similar invocation using a hard-coded path.)*
 
 Checkpoints will be saved under `data/`. Edit `examples/train.py` if you need to
 adjust the path to your PhantomJS or Chromium driver.
 
 ## Running a trained agent
 
-To watch the agent play the standard game, use the rollout script:
+To watch the agent play the standard game, use the rollout script. Again,
+specify the full Python path so `mpirun` can locate it:
 
 ~~~~
-mpirun -np 4 python examples/rollout.py
+mpirun -np 4 $(which python3) examples/rollout.py
 ~~~~
 
 The script loads the most recent saved policy and opens a browser window. Change
