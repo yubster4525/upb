@@ -5,6 +5,7 @@
 
 import sys
 import pickle
+import argparse
 
 from mpi4py import MPI
 
@@ -73,15 +74,23 @@ initial_states_filename = os.path.join(init_states_dir, "stage{}.pickle".format(
 rewards_history = []
 obs_means_history = []
 
-def train():
+def train(progress_port=None):
     # MPI setup
     rank = MPI.COMM_WORLD.Get_rank()
     comm_size = MPI.COMM_WORLD.Get_size()
-    
+
     sess = tf_util.single_threaded_session()
     sess.__enter__()
     if rank != 0:
         logger.set_level(logger.DISABLED)
+
+    progress_server = None
+    progress_ui = None
+    if progress_port is not None and rank == 0:
+        from upb.util import progress_ui as _pui
+        progress_ui = _pui
+        progress_ui.update_progress(stage=initial_stage)
+        progress_server = progress_ui.start_server(progress_port)
         
     # Set up data directory
     if rank == 0:
@@ -177,6 +186,9 @@ def train():
             print("Mean reward =", np.mean(loc['rews']))
             rewards_history.append(loc['rews'].copy())
             obs_means_history.append(loc['pi'].getObservationMeans())
+            if progress_port is not None and rank == 0:
+                progress_ui.update_progress(iteration=iters_so_far,
+                                             mean_reward=float(np.mean(loc['rews'])))
                 
     def callback(loc, glob):
         if rank == 0:
@@ -219,8 +231,15 @@ def train():
         update_obs_scaling=update_obs_scaling
     )
 
+    if progress_server is not None:
+        progress_ui.stop_server(progress_server)
+
 def main():
-    train()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--progress-port', type=int, default=None,
+                        help='Serve training progress on this port')
+    args = parser.parse_args()
+    train(progress_port=args.progress_port)
 
 if __name__ == "__main__":
     main()
