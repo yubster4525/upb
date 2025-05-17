@@ -62,6 +62,13 @@ mpirun -np 4 python examples/train.py
 Checkpoints will be saved under `data/`. Edit `examples/train.py` if you need to
 adjust the path to your PhantomJS or Chromium driver.
 
+To see training progress in a browser, pass the ``--progress-port`` option to
+``examples/train.py`` and open ``http://localhost:<port>``. For example:
+
+~~~~
+mpirun -np 4 python examples/train.py --progress-port 8080
+~~~~
+
 ## Running a trained agent
 
 To watch the agent play the standard game, use the rollout script:
