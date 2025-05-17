@@ -1,0 +1,12 @@
+# Core dependencies for running the Universal Paperclips Bot
+baselines
+numpy
+py_mini_racer
+selenium
+lxml
+gym
+matplotlib
+mpi4py
+tensorflow>=1.0.0
+keras
+sphinx  # optional, for building documentation
