@@ -6,6 +6,7 @@ Intended for learning about reinforcement learning.
 
 ## General
 - Python 3
+- MPI implementation (e.g., OpenMPI or MPICH) for `mpirun`
 
 ## Game Handler
 - Python modules:
@@ -23,9 +24,10 @@ Intended for learning about reinforcement learning.
 
 ## Learning
 - Python modules:
-	- Numpy
-	- [OpenAI Gym](https://github.com/openai/gym)
-	- [OpenAI Baselines](https://github.com/openai/baselines)
+        - Numpy
+        - [OpenAI Gym](https://github.com/openai/gym)
+        - [OpenAI Baselines](https://github.com/openai/baselines)
+        - mpi4py
 
 ## Plotting
 - Python modules:
@@ -49,6 +51,9 @@ pip install -e .
 After installing the dependencies, you can train the provided PPO agent on the
 training version of the game. The training script uses MPI so you can run it
 with multiple processes:
+
+Ensure that both an MPI implementation and the `mpi4py` Python package are
+installed before running the examples.
 
 ~~~~
 mpirun -np 4 python examples/train.py
